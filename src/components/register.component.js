@@ -3,14 +3,15 @@ import Form from "react-validation/build/form";
 import Input from "react-validation/build/input";
 import CheckButton from "react-validation/build/button";
 import { isEmail } from "validator";
-
+// import  { withTranslation}  from "react-i18next";
+import {t} from "i18next";
 import AuthService from "../services/auth.service";
 
 const required = value => {
   if (!value) {
     return (
       <div className="alert alert-danger" role="alert">
-        This field is required!
+        {t('requiredField')}
       </div>
     );
   }
@@ -20,7 +21,7 @@ const email = value => {
   if (!isEmail(value)) {
     return (
       <div className="alert alert-danger" role="alert">
-        This is not a valid email.
+        {t('wrongMail')}
       </div>
     );
   }
@@ -30,32 +31,57 @@ const vusername = value => {
   if (value.length < 3 || value.length > 20) {
     return (
       <div className="alert alert-danger" role="alert">
-        The username must be between 3 and 20 characters.
+        {t('userNameLength')}
       </div>
     );
   }
 };
 
+const vname = value => {
+  if (value.length > 20) {
+    return (
+      <div className="alert alert-danger" role="alert">
+        {t('nameLength')}
+      </div>
+    );
+  }
+};
+
+const vlastName = value => {
+  if (value.length > 20) {
+    return (
+      <div className="alert alert-danger" role="alert">
+        {t('lastNameLength')}
+      </div>
+    );
+  }
+};
+
+// const {t} = this.props;
 const vpassword = value => {
   if (value.length < 6 || value.length > 40) {
     return (
       <div className="alert alert-danger" role="alert">
-        The password must be between 6 and 40 characters.
+        {t('passwordLength')}
       </div>
     );
   }
 };
 
-export default class Register extends Component {
+ class Register extends Component {
   constructor(props) {
     super(props);
     this.handleRegister = this.handleRegister.bind(this);
     this.onChangeUsername = this.onChangeUsername.bind(this);
+    this.onChangename = this.onChangename.bind(this);
+    this.onChangelastName = this.onChangelastName.bind(this);
     this.onChangeEmail = this.onChangeEmail.bind(this);
     this.onChangePassword = this.onChangePassword.bind(this);
 
     this.state = {
       username: "",
+      name: "",
+      lastName: "",
       email: "",
       password: "",
       successful: false,
@@ -66,6 +92,18 @@ export default class Register extends Component {
   onChangeUsername(e) {
     this.setState({
       username: e.target.value
+    });
+  }
+
+  onChangename(e) {
+    this.setState({
+      name: e.target.value
+    });
+  }
+
+  onChangelastName(e) {
+    this.setState({
+      lastName: e.target.value
     });
   }
 
@@ -94,6 +132,8 @@ export default class Register extends Component {
     if (this.checkBtn.context._errors.length === 0) {
       AuthService.register(
         this.state.username,
+        this.state.name,
+        this.state.lastName,
         this.state.email,
         this.state.password
       ).then(
@@ -121,6 +161,7 @@ export default class Register extends Component {
   }
 
   render() {
+    
     return (
       <div className="col-md-12">
         <div className="card card-container">
@@ -139,7 +180,7 @@ export default class Register extends Component {
             {!this.state.successful && (
               <div>
                 <div className="form-group">
-                  <label htmlFor="username">Username</label>
+                  <label htmlFor="username">{t('username')}</label>
                   <Input
                     type="text"
                     className="form-control"
@@ -149,9 +190,31 @@ export default class Register extends Component {
                     validations={[required, vusername]}
                   />
                 </div>
+                <div className="form-group">
+                  <label htmlFor="name">{t('name')}</label>
+                  <Input
+                    type="text"
+                    className="form-control"
+                    name="name"
+                    value={this.state.name}
+                    onChange={this.onChangename}
+                    validations={[required, vname]}
+                  />
+                </div>
+                <div className="form-group">
+                  <label htmlFor="lastName">{t('lastName')}</label>
+                  <Input
+                    type="text"
+                    className="form-control"
+                    name="lastName"
+                    value={this.state.lastName}
+                    onChange={this.onChangelastName}
+                    validations={[required, vlastName]}
+                  />
+                </div>
 
                 <div className="form-group">
-                  <label htmlFor="email">Email</label>
+                  <label htmlFor="email">{t('email')}</label>
                   <Input
                     type="text"
                     className="form-control"
@@ -163,7 +226,7 @@ export default class Register extends Component {
                 </div>
 
                 <div className="form-group">
-                  <label htmlFor="password">Password</label>
+                  <label htmlFor="password">{t('password')}</label>
                   <Input
                     type="password"
                     className="form-control"
@@ -175,7 +238,7 @@ export default class Register extends Component {
                 </div>
 
                 <div className="form-group">
-                  <button className="btn btn-primary btn-block">Sign Up</button>
+                  <button className="btn btn-primary btn-block">{t('signup')}</button>
                 </div>
               </div>
             )}
@@ -206,3 +269,4 @@ export default class Register extends Component {
     );
   }
 }
+export default Register;

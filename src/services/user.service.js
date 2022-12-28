@@ -1,24 +1,26 @@
-import axios from 'axios';
 import authHeader from './auth-header';
-
-const API_URL = 'http://localhost:8080/api/test/';
-
-class UserService {
-  getPublicContent() {
-    return axios.get(API_URL + 'all');
-  }
-
-  getUserBoard() {
-    return axios.get(API_URL + `user`, { headers: authHeader() });
-  }
-
-  getModeratorBoard() {
-    return axios.get(API_URL + `mod`, { headers: authHeader() });
-  }
-
-  getAdminBoard() {
-    return axios.get(API_URL + `admin`, { headers: authHeader() });
-  }
+import axios from 'axios';
+const API_URL = 'http://localhost:8080/api/v1/';
+const getPublicContent = () => {
+  return axios.get(API_URL + "all");
 }
-
-export default new UserService();
+ const getAll = () => {
+    return axios.get(API_URL + 'users', { headers: authHeader() });
+  };
+  const create = (data) => {
+    return axios.post(API_URL + 'users', data, { headers: authHeader() });
+  };
+  const get = (id) => {
+    return axios.get(API_URL + `users/${id}`, { headers: authHeader() });
+  };
+  const update = (data,id) => {
+    return axios.post(API_URL + `users/${id}`, data, { headers: authHeader() });
+  };
+  // const update = (data, id) => {
+  //   return httpClient.put(`/customers/${id}`, data);
+  // };
+  const remove = (id) => {
+    return axios.delete(API_URL + `users/${id}`, { headers: authHeader() });
+  };
+  // eslint-disable-next-line import/no-anonymous-default-export
+  export default { getAll, create, get, update, remove, getPublicContent};
